@@ -21,7 +21,6 @@ public class ThreeFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -31,7 +30,7 @@ public class ThreeFragment extends Fragment {
 
         // 2. script 사용 설정 (필수)
         webView.getSettings().setJavaScriptEnabled(true);
-        // 줌사용
+        // 2.1 줌사용
         webView.getSettings().setSupportZoom(true);
         webView.getSettings().setBuiltInZoomControls(true);
 

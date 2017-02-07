@@ -1,6 +1,5 @@
 package com.veryworks.android.myutility;
 
-import android.*;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -10,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 메써드 추적 시작 ------
+        Debug.startMethodTracing("trace_result");
+
         // 프래그먼트 init
         one = new OneFragment();
         two = new TwoFragment();
@@ -87,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             init();
         }
+
+        // 메써드 추적 종료
+        Debug.stopMethodTracing();
 
     }
 

@@ -1,7 +1,6 @@
 package com.veryworks.android.myutility;
 
 
-import android.*;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -48,7 +47,6 @@ public class FourFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         // 리스너 등록
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -60,11 +58,11 @@ public class FourFragment extends Fragment implements OnMapReadyCallback {
                 3000, // 통지사이의 최소 시간간격 (miliSecond) // 업데이트 간격
                 10, // 통지사이의 최소 변경거리 (m)
                 locationListener);
-//        // 정보제공자로 네트워크프로바이더 등록
-//        manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
-//                3000, // 통지사이의 최소 시간간격 (miliSecond)
-//                10, // 통지사이의 최소 변경거리 (m)
-//                locationListener);
+        // 정보제공자로 네트워크프로바이더 등록
+        manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                3000,
+                10,
+                locationListener);
 
     }
     @Override
@@ -95,9 +93,10 @@ public class FourFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        LatLng sydney = new LatLng(-34, 151);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,15));
+        // 신사역 좌표
+        LatLng seoul = new LatLng(37.516066, 127.019361);
+        map.addMarker(new MarkerOptions().position(seoul).title("Sinsa in Seoul"));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul,17));
     }
 
     LocationListener locationListener = new LocationListener() {
@@ -115,7 +114,7 @@ public class FourFragment extends Fragment implements OnMapReadyCallback {
             map.addMarker(new MarkerOptions().position(myPosition).title("I am here!"));
                                                     //  내 위치             마커 타이틀
             // 화면을 내위치로 이동시키는 함수
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 10));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 18));
                                                              // 내 위치 , 줌레벨
         }
 
