@@ -52,10 +52,18 @@ adb shell 사용법을 익힙니다
 
 ## Method Trace
 * WRITE_EXTERNAL_STORAGE 권한설정
+* Source code 에서 사용
 ```java
 // 메써드 추적 시작 ------
-Debug.startMethodTracing("trace_result");
+Debug.startMethodTracing("결과파일");
 
 // 메써드 추적 종료
 Debug.stopMethodTracing();
 ```
+* 결과파일 에뮬레이터에서 가져오기
+
+adb -s 디바이스면 pull sdcard/결과파일.trace 최종파일.trace
+
+* 결과파일 보기
+
+traceview 결과파일.trace
