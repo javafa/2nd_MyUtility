@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -47,27 +48,34 @@ public class FourFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         // 리스너 등록
-        try {
-            // GPS 제공자의 정보가 바뀌면 콜백하도록 리스너 등록
-            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, // 등록할 위치제공자
-                    3000, // 통지사이의 최소 시간간격 (miliSecond) // 업데이트 간격
-                    10, // 통지사이의 최소 변경거리 (m)
-                    locationListener);
-            // 정보제공자로 네트워크프로바이더 등록
-//            manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
-//                    3000, // 통지사이의 최소 시간간격 (miliSecond)
-//                    10, // 통지사이의 최소 변경거리 (m)
-//                    locationListener);
-        } catch (SecurityException ex) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
         }
+        // GPS 제공자의 정보가 바뀌면 콜백하도록 리스너 등록
+        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, // 등록할 위치제공자
+                3000, // 통지사이의 최소 시간간격 (miliSecond) // 업데이트 간격
+                10, // 통지사이의 최소 변경거리 (m)
+                locationListener);
+//        // 정보제공자로 네트워크프로바이더 등록
+//        manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
+//                3000, // 통지사이의 최소 시간간격 (miliSecond)
+//                10, // 통지사이의 최소 변경거리 (m)
+//                locationListener);
+
     }
     @Override
     public void onPause() {
         super.onPause();
         // 리스너 해제
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
         }
         manager.removeUpdates(locationListener);
     }
