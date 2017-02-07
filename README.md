@@ -62,7 +62,7 @@ Debug.stopMethodTracing();
 ```
 * 결과파일 에뮬레이터에서 가져오기
 
-adb -s 디바이스면 pull sdcard/결과파일.trace 최종파일.trace
+adb -s 디바이스명 pull sdcard/결과파일.trace 최종파일.trace
 
 * 결과파일 보기
 
