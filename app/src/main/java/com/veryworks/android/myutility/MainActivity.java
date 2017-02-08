@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     ThreeFragment three;
     FourFragment four;
 
-    // 페이지 이동경로를 저장하는 stack 변수
+    // 페이지 이동경로를 저장하는 history stack 변수
     Stack<Integer> pageStack = new Stack<>();
 
     boolean backPress = false;
