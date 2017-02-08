@@ -21,6 +21,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 /*
  * GPS 사용 순서
  * 1. manifest 에 FINE, COARSE 권한추가
@@ -32,16 +34,23 @@ import android.widget.Toast;
  * 6. Listener 실행
  * 7. Listener 해제
  */
-
-
 public class MainActivity extends AppCompatActivity {
 
     // 탭 및 페이저 속성 정의
     final int TAB_COUNT = 4;
+    // 현재 페이지
+    private int page_position = 0;
+
+    ViewPager viewPager;
     OneFragment one;
     TwoFragment two;
     ThreeFragment three;
     FourFragment four;
+
+    // 페이지 이동경로를 저장하는 stack 변수
+    ArrayList<Integer> pageStack = new ArrayList<>();
+
+    boolean backPress = false;
 
     // 위치정보 관리자
     private LocationManager manager;
@@ -54,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 메써드 추적 시작 ------
+        // Method 추적 시작 ------
+        // 마시멜로 이상버전에서 사용하기 위해서는 외부저장소 런타임권한 필요
         Debug.startMethodTracing("trace_result");
 
         // 프래그먼트 init
@@ -72,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab( tabLayout.newTab().setText("현재위치") );
 
         // - 프래그먼트 페이저 작성
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
         // 아답터 생성
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
@@ -80,7 +90,33 @@ public class MainActivity extends AppCompatActivity {
         // 1. 페이저 리스너 : 페이저가 변경되었을때 탭을 바꿔주는 리스너
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        // 2. 탭 리스너 : 탭이 변경되었을 때 페이지를 바꿔저는 리스너
+        // 2. 페이지의 변경사항을 체크한다.
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                // 뒤로가기를 누르지 않았을때만 stack 에 포지션을 더한다
+                if(!backPress){
+                    pageStack.add(page_position);
+                // 뒤로가기를 눌렀으면 false로 다시 세팅해준다.
+                }else{
+                    backPress = false;
+                }
+
+                page_position = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        // 3. 탭 리스너 : 탭이 변경되었을 때 페이지를 바꿔저는 리스너
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
         // - GPS 사용권한 체크
@@ -91,10 +127,10 @@ public class MainActivity extends AppCompatActivity {
             init();
         }
 
-        // 메써드 추적 종료
+        // Method 추적 종료
         Debug.stopMethodTracing();
-
     }
+
 
     class PagerAdapter extends FragmentStatePagerAdapter {
 
@@ -203,6 +239,41 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 return false;
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        switch (page_position) {
+            // webview 페이지에서
+            case 2:
+                // 뒤로가기가 가능하면 아무런 동작을 하지 않는다
+                if (three.goBack()) {
+                    // 뒤로가기가 안되면 앱을 닫는다
+                } else {
+                    goBackStack();
+                }
+                break;
+            // 위의 조건에 해당되지 않는 모든 케이스는 아래 로직을 처리한다.
+            default:
+                goBackStack();
+                break;
+        }
+    }
+
+    // stack 뒤로가기
+    private void goBackStack(){
+        // stack 의 사이즈가 0이면 앱을 종료
+        if(pageStack.size() < 1){
+            super.onBackPressed();
+        // stack 에 position 값이 있으면
+        }else {
+            // View Pager 리스너에서 stack에 더해지는 것을 방지하기 위해 backpress 상태값을 미리 세팅
+            backPress = true;
+            // 페이지를 stack의 가장 마지막에 있는 위치값으로 이동
+            viewPager.setCurrentItem(pageStack.get(pageStack.size() - 1));
+            // 이동후에 stack에서 위치값을 제거
+            pageStack.remove(pageStack.size() - 1);
         }
     }
 }

@@ -16,6 +16,10 @@ import android.webkit.WebViewClient;
  */
 public class ThreeFragment extends Fragment {
 
+    WebView webView;
+
+    // 일종의 View Holder : 성능이 개선될 여지가 많다
+    View view;
 
     public ThreeFragment() {
         // Required empty public constructor
@@ -24,9 +28,12 @@ public class ThreeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_three, container, false);
+        if(view != null)
+            return view;
+
+        view = inflater.inflate(R.layout.fragment_three, container, false);
         // 1. 사용할 위젯을 가져온다.
-        WebView webView = (WebView) view.findViewById(R.id.webView);
+        webView = (WebView) view.findViewById(R.id.webView);
 
         // 2. script 사용 설정 (필수)
         webView.getSettings().setJavaScriptEnabled(true);
@@ -43,5 +50,14 @@ public class ThreeFragment extends Fragment {
         webView.loadUrl("http://google.com");
 
         return view;
+    }
+
+    public boolean goBack() {
+        if(webView.canGoBack()){
+            webView.goBack();
+            return true;
+        }else{
+            return false;
+        }
     }
 }
