@@ -21,7 +21,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.Stack;
 
 /*
  * GPS 사용 순서
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     FourFragment four;
 
     // 페이지 이동경로를 저장하는 stack 변수
-    ArrayList<Integer> pageStack = new ArrayList<>();
+    Stack<Integer> pageStack = new Stack<>();
 
     boolean backPress = false;
 
@@ -101,12 +101,11 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 // 뒤로가기를 누르지 않았을때만 stack 에 포지션을 더한다
                 if(!backPress){
-                    pageStack.add(page_position);
+                    pageStack.push(page_position);
                 // 뒤로가기를 눌렀으면 false로 다시 세팅해준다.
                 }else{
                     backPress = false;
                 }
-
                 page_position = position;
             }
 
@@ -271,9 +270,7 @@ public class MainActivity extends AppCompatActivity {
             // View Pager 리스너에서 stack에 더해지는 것을 방지하기 위해 backpress 상태값을 미리 세팅
             backPress = true;
             // 페이지를 stack의 가장 마지막에 있는 위치값으로 이동
-            viewPager.setCurrentItem(pageStack.get(pageStack.size() - 1));
-            // 이동후에 stack에서 위치값을 제거
-            pageStack.remove(pageStack.size() - 1);
+            viewPager.setCurrentItem(pageStack.pop());
         }
     }
 }
