@@ -100,7 +100,7 @@ public class FiveFragment extends Fragment {
         Uri target = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         // 2. projection 정의
         String projection[] = { MediaStore.Images.ImageColumns.DATA }; // 이미지 경로
-        // 정렬 추가
+        // 정렬 추가 - 날짜순 역순 정렬
         String order = MediaStore.Images.ImageColumns.DATE_ADDED +" DESC";
 
         // 3. 데이터 가져오기
