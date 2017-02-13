@@ -176,10 +176,13 @@ public class MainActivity extends AppCompatActivity implements FiveFragment.OnLi
                 != PackageManager.PERMISSION_GRANTED
                 || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
+                || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED
                 ){
             // 1.2 요청할 권한 목록 작성
             String permArr[] = {android.Manifest.permission.ACCESS_FINE_LOCATION
-                    , android.Manifest.permission.ACCESS_COARSE_LOCATION};
+                    , android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    , android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
             // 1.3 시스템에 권한요청
             requestPermissions(permArr, REQ_CODE);
         }else{
@@ -194,7 +197,8 @@ public class MainActivity extends AppCompatActivity implements FiveFragment.OnLi
         if(requestCode == REQ_CODE){
             // 2.1 배열에 넘긴 런타임권한을 체크해서 승인이 됬으면
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[2] == PackageManager.PERMISSION_GRANTED){
                 // 2.2 프로그램 실행
                 init();
             }else{

@@ -1,13 +1,17 @@
 package com.veryworks.android.myutility;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.veryworks.android.myutility.FiveFragment.OnListFragmentInteractionListener;
 import com.veryworks.android.myutility.dummy.DummyContent.DummyItem;
 
@@ -20,15 +24,28 @@ import java.util.List;
  * TODO: Replace the implementation with code for your data type.
  */
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
-
+    private static final String TAG = "MyItemRecycler";
     private final Context context;
-    private final List<Uri> datas = new ArrayList<>();
+    private final List<String> datas = new ArrayList<>();
     private final OnListFragmentInteractionListener mListener;
 
     public MyItemRecyclerViewAdapter(Context context, OnListFragmentInteractionListener listener) {
         this.context = context;
         // 폰에서 이미지를 가져온후 datas 에 세팅한다
-
+        ContentResolver resolver = context.getContentResolver();
+        // 1. 데이터 Uri 정의
+        Uri target = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        // 2. projection 정의
+        String projection[] = { MediaStore.Images.Media.DATA }; // DATA : image 경로가 있는 컬럼명
+        // 3. 데이터 가져오기
+        Cursor cursor = resolver.query(target, projection, null, null, null);
+        if(cursor != null) {
+            while (cursor.moveToNext()) {
+                String uriString = cursor.getString(0);
+                datas.add(uriString);
+            }
+            cursor.close();
+        }
         mListener = listener;
     }
 
@@ -42,7 +59,10 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.imageUri = datas.get(position);
-        holder.imageView.setImageURI(holder.imageUri);
+//        holder.imageView.setImageURI(holder.imageUri); // 이미지 사이즈 때문에 터짐
+        Glide.with(context)
+                .load(holder.imageUri)
+                .into(holder.imageView);
     }
 
     @Override
@@ -52,7 +72,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
-        public Uri imageUri;
+        public String imageUri;
 
         public ViewHolder(View view) {
             super(view);
