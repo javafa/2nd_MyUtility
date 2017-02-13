@@ -21,6 +21,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.veryworks.android.myutility.dummy.DummyContent;
+
 import java.util.Stack;
 
 /*
@@ -34,10 +36,10 @@ import java.util.Stack;
  * 6. Listener 실행
  * 7. Listener 해제
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FiveFragment.OnListFragmentInteractionListener {
 
     // 탭 및 페이저 속성 정의
-    final int TAB_COUNT = 4;
+    final int TAB_COUNT = 5;
     // 현재 페이지
     private int page_position = 0;
 
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     TwoFragment two;
     ThreeFragment three;
     FourFragment four;
+    FiveFragment five;
 
     // 페이지 이동경로를 저장하는 history stack 변수
     Stack<Integer> pageStack = new Stack<>();
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         two = new TwoFragment();
         three = new ThreeFragment();
         four = new FourFragment();
+        five = FiveFragment.newInstance(3); // 미리 정해진 그리드 가로축 개수
 
         // - 탭 Layout 정의
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab);
@@ -80,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab( tabLayout.newTab().setText("단위변환") );
         tabLayout.addTab( tabLayout.newTab().setText("검색") );
         tabLayout.addTab( tabLayout.newTab().setText("현재위치") );
+        tabLayout.addTab( tabLayout.newTab().setText("갤러리") );
 
         // - 프래그먼트 페이저 작성
         viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -130,6 +135,11 @@ public class MainActivity extends AppCompatActivity {
         Debug.stopMethodTracing();
     }
 
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
+    }
+
 
     class PagerAdapter extends FragmentStatePagerAdapter {
 
@@ -145,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
                 case 1: fragment = two; break;
                 case 2: fragment = three; break;
                 case 3: fragment = four; break;
+                case 4: fragment = five; break;
             }
             return fragment;
         }
