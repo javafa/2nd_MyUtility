@@ -36,7 +36,8 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         // 1. 데이터 Uri 정의
         Uri target = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         // 2. projection 정의
-        String projection[] = { MediaStore.Images.Media.DATA }; // DATA : image 경로가 있는 컬럼명
+        //String projection[] = { MediaStore.Images.Media.DATA }; // DATA : image 경로가 있는 컬럼명
+        String projection[] = { MediaStore.Images.Thumbnails.DATA }; // 썸네일 이미지 경로
         // 3. 데이터 가져오기
         Cursor cursor = resolver.query(target, projection, null, null, null);
         if(cursor != null) {
