@@ -155,6 +155,7 @@ public class FiveFragment extends Fragment {
                     // 아답터에 변경된 데이터 반영하기
                     adapter = new MyItemRecyclerViewAdapter(getContext(), datas);
                     recyclerView.setAdapter(adapter);
+                    // 얘만 호출하면 되야됨...
                     adapter.notifyDataSetChanged();
                 }
                 break;

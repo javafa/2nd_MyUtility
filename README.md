@@ -67,3 +67,20 @@ adb -s 디바이스명 pull sdcard/결과파일.trace 최종파일.trace
 * 결과파일 보기
 
 traceview 결과파일.trace
+
+## MediaStore.Images.ImageColumns
+이미지 데이터를 불러오면서 query의 마지막 인자를 사용해서 정렬처리합니다
+```java
+ContentResolver resolver = getContext().getContentResolver();
+// 1. 데이터 Uri 정의
+Uri target = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+// 2. projection 정의
+String projection[] = { MediaStore.Images.ImageColumns.DATA }; // 이미지 경로
+// 정렬 추가 - 날짜순 역순 정렬
+// 컬럼명 ASC : 정방향 정렬
+// 컬럼명 DESC : 역방향 정렬
+String order = MediaStore.Images.ImageColumns.DATE_ADDED +" DESC";
+
+// 3. 데이터 가져오기
+Cursor cursor = resolver.query(target, projection, null, null, order);
+```
