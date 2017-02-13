@@ -21,8 +21,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.veryworks.android.myutility.dummy.DummyContent;
-
 import java.util.Stack;
 
 /*
@@ -36,7 +34,7 @@ import java.util.Stack;
  * 6. Listener 실행
  * 7. Listener 해제
  */
-public class MainActivity extends AppCompatActivity implements FiveFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity{
 
     // 탭 및 페이저 속성 정의
     final int TAB_COUNT = 5;
@@ -135,12 +133,6 @@ public class MainActivity extends AppCompatActivity implements FiveFragment.OnLi
         Debug.stopMethodTracing();
     }
 
-    @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-
-    }
-
-
     class PagerAdapter extends FragmentStatePagerAdapter {
 
         public PagerAdapter(FragmentManager fm) {
@@ -178,11 +170,14 @@ public class MainActivity extends AppCompatActivity implements FiveFragment.OnLi
                 != PackageManager.PERMISSION_GRANTED
                 || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED
+                || checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED
                 ){
             // 1.2 요청할 권한 목록 작성
-            String permArr[] = {android.Manifest.permission.ACCESS_FINE_LOCATION
-                    , android.Manifest.permission.ACCESS_COARSE_LOCATION
-                    , android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            String permArr[] = {Manifest.permission.ACCESS_FINE_LOCATION
+                    , Manifest.permission.ACCESS_COARSE_LOCATION
+                    , Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    , Manifest.permission.CAMERA};
             // 1.3 시스템에 권한요청
             requestPermissions(permArr, REQ_CODE);
         }else{
@@ -198,7 +193,8 @@ public class MainActivity extends AppCompatActivity implements FiveFragment.OnLi
             // 2.1 배열에 넘긴 런타임권한을 체크해서 승인이 됬으면
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[2] == PackageManager.PERMISSION_GRANTED){
+                    && grantResults[2] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[3] == PackageManager.PERMISSION_GRANTED){
                 // 2.2 프로그램 실행
                 init();
             }else{
